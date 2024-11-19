@@ -27,6 +27,9 @@ app.use(
     credentials: true,
   })
 );
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // Erro Middleware
 app.use(errorHandler);
 
