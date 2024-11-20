@@ -1,8 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../model/productModel");
 const BiddingProduct = require("../model/biddingProductModel");
-//const sendEmail = require("../utils/sendEmail");
-//const User = require("../model/userModel");
+const sendEmail = require("../utils/sendEmail");
+const User = require("../model/userModel");
 
 const getBiddingHistory = asyncHandler(async (req, res) => {
     const { productId } = req.params;
@@ -76,7 +76,9 @@ const getBiddingHistory = asyncHandler(async (req, res) => {
     //   } */
   
     // Check if the user is authorized to sell the product
-    if (product.user.toString() !== userId) {
+    if (product.user.toString() !== userId.toString()) {
+      console.log(product.user.toString());
+      console.log(userId);
       return res.status(403).json({ error: "You do not have permission to sell this product" });
     }
   
@@ -115,12 +117,12 @@ const getBiddingHistory = asyncHandler(async (req, res) => {
     // Save product
     await product.save();
   
-    // // Send email notification to the highest bidder
-    // await sendEmail({
-    //   email: highestBid.user.email,
-    //   subject: "Congratulations! You won the auction!",
-    //   text: `You have won the auction for "${product.title}" with a bid of $${highestBid.price}.`,
-    // });
+    // Send email notification to the highest bidder
+    await sendEmail({
+      email: highestBid.user.email,
+      subject: "Congratulations! You won the auction!",
+      text: `You have won the auction for "${product.title}" with a bid of $${highestBid.price}.`,
+    });
   
     res.status(200).json({ message: "Product has been successfully sold!" });
   });
