@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 const userRoute = require("./routes/userRoute");
 const productRoute = require("./routes/productRoute");
 const biddingRoute = require("./routes/biddingRoute");
+const categoryRoute = require("./routes/categoryRoute");
 
 const errorHandler=require("./middleWare/errorMiddleWare");
 
@@ -45,6 +46,7 @@ const PORT = process.env.PORT || 5000;
 app.use("/api/users", userRoute);
 app.use("/api/product", productRoute);
 app.use("/api/bidding", biddingRoute);
+app.use("/api/category", categoryRoute);
 
 // Connect to MongoDB with Mongoose
 mongoose
