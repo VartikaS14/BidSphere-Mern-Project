@@ -77,7 +77,7 @@ export const Hero = () => {
           </div>
         </Container>
       </section>
-      <div className="bg-white w-full py-16 -mt-10 rounded-t-[40px]"></div>
+      <div className="bg-white w-full py-8 -mt-10 rounded-t-[40px]"></div>
     </>
   );
 };
