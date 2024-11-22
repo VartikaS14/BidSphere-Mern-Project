@@ -6,7 +6,7 @@ export const Layout = ({children}) => {
   return (
     <div>
         <Header/>
-        <main className="h-[500vh]">{children}</main>
+        <main >{children}</main>
         <Footer/>
     </div>
   )

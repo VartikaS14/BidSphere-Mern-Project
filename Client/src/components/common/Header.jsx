@@ -44,7 +44,7 @@ export const Header = () => {
 //   const role = "buyer";
   return (
     <>
-      <header className={isHomePage ? `header py-1 bg-primary ${isScrolled ? "scrolled" : ""}` : `header bg-white shadow-s1 ${isScrolled ? "scrolled" : ""}`}>
+      <header className={isHomePage ? `header py-0 bg-primary ${isScrolled ? "scrolled" : ""}` : `header bg-white shadow-s1 ${isScrolled ? "scrolled" : ""}`}>
         <Container>
           <nav className="p-4 flex justify-between items-center relative">
             <div className="flex items-center gap-14">

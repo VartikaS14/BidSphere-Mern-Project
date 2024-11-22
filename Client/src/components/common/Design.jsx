@@ -66,7 +66,7 @@ const Container = ({ children, className }) => {
 
 const PrimaryButton = ({ children, className }) => {
   return (
-    <button type="submit" className={`${className} text-white bg-green font-medium rounded-full text-lg px-16 py-3 hover:bg-primary transition ease-in-out`}>
+    <button type="submit" className={`${className} text-white bg-green font-medium rounded-full text-lg px-5 py-3 hover:bg-primary transition ease-in-out`}>
       {children}
     </button>
   );
