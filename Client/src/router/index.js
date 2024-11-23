@@ -10,3 +10,6 @@ export {TopSeller} from "../screens/hero/TopSeller";
 export {Process} from "../screens/hero/Process";
 export {Trust} from "../screens/hero/Trust";
 export {TopCollection} from "../screens/hero/TopCollection";
+
+
+export {ProductDetails} from "../pages/product/ProductDetails";
