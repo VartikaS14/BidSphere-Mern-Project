@@ -1,7 +1,6 @@
 import { categorylists } from "../../utils/data";
-//import { CategoryCard, Container, Heading } from "../../router";
-import {Container, Heading } from "../../components/common/Design";
-import { CategoryCard } from "../../components/cards/CategoryCard";
+import { CategoryCard, Container, Heading } from "../../router";
+
 export const CategorySlider = () => {
   return (
     <>

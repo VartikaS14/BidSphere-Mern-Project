@@ -1,6 +1,5 @@
-// import { Caption, Container, Heading, ProfileCard, Title } from "../../router";
+import { Caption, Container, Heading, ProfileCard, Title } from "../../router";
 import { topSellerList } from "../../utils/data";
-import { Caption, Container, Heading, ProfileCard, Title } from "../../components/common/Design"
 
 export const TopSeller = () => {
   return (
@@ -31,7 +30,6 @@ export const TopSeller = () => {
           </div>
         </Container>
       </section>
-      
     </>
   );
 };

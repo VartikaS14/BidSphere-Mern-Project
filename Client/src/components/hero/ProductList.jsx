@@ -1,7 +1,7 @@
-//import { Container, Heading } from "../../router";
+import { Container, Heading } from "../../router";
 import { productlists } from "../../utils/data";
-import { ProductCard } from "../../components/cards/ProductCard";
-import { Container,Heading } from "../../components/common/Design";
+import { ProductCard } from "../cards/ProductCard";
+
 export const ProductList = () => {
   return (
     <>
@@ -19,7 +19,6 @@ export const ProductList = () => {
           </div>
         </Container>
       </section>
-
     </>
   );
 };

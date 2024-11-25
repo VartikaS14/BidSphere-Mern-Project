@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { Container ,CustomNavLink,CustomNavLinkList} from "./Design";
-// // design
+
+// design
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
- import { IoSearchOutline } from "react-icons/io5";
-// import { Container, CustomNavLink, CustomNavLinkList, ProfileCard } from "../../router";
-// import { User1 } from "../hero/Hero";
+import { IoSearchOutline } from "react-icons/io5";
+import { Container, CustomNavLink, CustomNavLinkList, ProfileCard } from "../../router";
+import { User1 } from "../hero/Hero";
 import { menulists } from "../../utils/data";
+import { ShowOnLogin, ShowOnLogout } from "../../utils/HiddenLink.jsx";
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,10 +42,10 @@ export const Header = () => {
   // Check if it's the home page
   const isHomePage = location.pathname === "/";
 
-//   const role = "buyer";
+  const role = "buyer";
   return (
     <>
-      <header className={isHomePage ? `header py-0 bg-primary ${isScrolled ? "scrolled" : ""}` : `header bg-white shadow-s1 ${isScrolled ? "scrolled" : ""}`}>
+      <header className={isHomePage ? `header py-1 bg-primary ${isScrolled ? "scrolled" : ""}` : `header bg-white shadow-s1 ${isScrolled ? "scrolled" : ""}`}>
         <Container>
           <nav className="p-4 flex justify-between items-center relative">
             <div className="flex items-center gap-14">
@@ -68,16 +69,31 @@ export const Header = () => {
             <div className="flex items-center gap-8 icons">
               <div className="hidden lg:flex lg:items-center lg:gap-8">
                 <IoSearchOutline size={23} className={`${isScrolled || !isHomePage ? "text-black" : "text-white"}`} />
-                {/*role === "buyer" &&*/ (
-                  <CustomNavLink href="/seller/login" className={`${isScrolled || !isHomePage ? "text-black" : "text-white"}`}>Become a Seller</CustomNavLink>
+                {role === "buyer" && (
+                  <ShowOnLogin>
+                    <CustomNavLink href="/seller/login" className={`${isScrolled || !isHomePage ? "text-black" : "text-white"}`}>
+                    Become a Seller
+                  </CustomNavLink>
+                  </ShowOnLogin>
+                  
                 )}
-                <CustomNavLink href="/login" className={`${isScrolled || !isHomePage ? "text-black" : "text-white"}`}>Sign in</CustomNavLink>
-                <CustomNavLink href="/register" className={`${!isHomePage || isScrolled ? "bg-green" : "bg-white"} px-8 py-2 rounded-full text-primary shadow-md`}>Join</CustomNavLink>
-                {/* <CustomNavLink href="/dashboard">
+                <ShowOnLogout>
+                <CustomNavLink href="/login" className={`${isScrolled || !isHomePage ? "text-black" : "text-white"}`}>
+                  Sign in
+                </CustomNavLink>
+                <CustomNavLink href="/register" className={`${!isHomePage || isScrolled ? "bg-green" : "bg-white"} px-8 py-2 rounded-full text-primary shadow-md`}>
+                  Join
+                </CustomNavLink>
+                </ShowOnLogout>
+                
+                <ShowOnLogin>
+                <CustomNavLink href="/dashboard">
                   <ProfileCard>
                     <img src={User1} alt="" className="w-full h-full object-cover" />
                   </ProfileCard>
-                </CustomNavLink> */}
+                </CustomNavLink>
+                </ShowOnLogin>
+                
               </div>
               <div className={`icon flex items-center justify-center gap-6 ${isScrolled || !isHomePage ? "text-primary" : "text-white"}`}>
                 <button onClick={toggleMenu} className="lg:hidden w-10 h-10 flex justify-center items-center bg-black text-white focus:outline-none">

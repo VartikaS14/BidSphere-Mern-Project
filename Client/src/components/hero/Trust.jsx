@@ -1,7 +1,5 @@
 import { trustList } from "../../utils/data";
-// import { Container, Heading } from "../../router";
-import { Container, Heading } from "../../components/common/Design";
-
+import { Container, Heading } from "../../router";
 
 export const Trust = () => {
   return (

@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "BidSphere Frontend Domain"],
+    origin: ["http://localhost:5173", "BidSphere Frontend Domain"],
     credentials: true,
   })
 );

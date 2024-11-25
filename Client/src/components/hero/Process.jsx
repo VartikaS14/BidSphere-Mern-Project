@@ -1,6 +1,5 @@
 import { processList } from "../../utils/data";
-// import { Container, Heading, Title } from "../../router";
-import { Container, Heading, Title } from "../../components/common/Design";
+import { Container, Heading, Title } from "../../router";
 
 export const Process = () => {
   return (

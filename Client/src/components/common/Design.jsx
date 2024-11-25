@@ -5,16 +5,16 @@ const Title = ({ level, children, className }) => {
   const Heading = `h${level}`;
   const classes = `${
     level === 1
-      ? "text-[40px] font-[700]"
+      ? "text-[45px] font-[700]"
       : level === 2
-      ? "text-[36px] font-[700]"
+      ? "text-[40px] font-[700]"
       : level === 3
-      ? "text-[30px] font-[700]"
+      ? "text-[35px] font-[700]"
       : level === 4
-      ? "text-[24px] font-[600]"
+      ? "text-[30px] font-[600]"
       : level === 5
-      ? "text-[18px] font-[600]"
-      : "text-[13px] font-[500]"
+      ? "text-[25px] font-[600]"
+      : "text-[18px] font-[500]"
   }`;
 
   return <Heading className={`${className} ${classes}`}>{children}</Heading>;
@@ -66,7 +66,7 @@ const Container = ({ children, className }) => {
 
 const PrimaryButton = ({ children, className }) => {
   return (
-    <button type="submit" className={`${className} text-white bg-green font-medium rounded-full text-lg px-5 py-3 hover:bg-primary transition ease-in-out`}>
+    <button type="submit" className={`${className} text-white bg-green font-medium rounded-full text-lg px-16 py-3 hover:bg-primary transition ease-in-out`}>
       {children}
     </button>
   );

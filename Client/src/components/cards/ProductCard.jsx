@@ -29,7 +29,7 @@ export const ProductCard = ({ item }) => {
           </div>
         </div>
         <div className="details mt-4">
-          <Title className="uppercase">{item.title.slice(0,30)}</Title>
+          <Title className="uppercase">{item.title}</Title>
           <hr className="mt-3" />
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center justify-between gap-5">
@@ -112,7 +112,6 @@ export const ProductCard = ({ item }) => {
           </div>
         </div>
       </div> */}
-      
     </>
   );
 };

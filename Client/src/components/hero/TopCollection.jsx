@@ -1,7 +1,5 @@
 import { topList } from "../../utils/data";
-// import { Caption, Container, Heading } from "../../router";
-import { Caption, Container, Heading } from "../../components/common/Design";
-
+import { Caption, Container, Heading } from "../../router";
 
 export const TopCollection = () => {
   return (
