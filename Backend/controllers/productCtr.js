@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../model/productModel");
+const BiddingProduct = require("../model/biddingProductModel");
 const slugify = require("slugify");
 const fs = require("fs");
 
@@ -77,6 +78,25 @@ const createProduct = asyncHandler(async (req, res) => {
 const getAllProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({}).sort("-createdAt").populate("user");
   res.json(products);
+});
+
+const getWonProducts = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const wonProducts = await Product.find({ soldTo: userId }).sort("-createdAt").populate("user");
+
+  const productsWithPrices = await Promise.all(
+    wonProducts.map(async (product) => {
+      const latestBid = await BiddingProduct.findOne({ product: product._id }).sort("-createdAt");
+      const biddingPrice = latestBid ? latestBid.price : product.price;
+      return {
+        ...product._doc,
+        biddingPrice, // Adding the price field
+      };
+    })
+  );
+
+  res.status(200).json(productsWithPrices);
 });
 
 const deleteProduct = asyncHandler(async (req, res) => {
@@ -182,18 +202,18 @@ const getAllProductsofUser = asyncHandler(async (req, res) => {
     .sort("-createdAt")
     .populate("user");
 
-  // const productsWithPrices = await Promise.all(
-  //   products.map(async (product) => {
-  //     const latestBid = await BiddingProduct.findOne({ product: product._id }).sort("-createdAt");
-  //     const biddingPrice = latestBid ? latestBid.price : product.price;
-  //     return {
-  //       ...product._doc,
-  //       biddingPrice, // Adding the price field
-  //     };
-  //   })
-  // );
+  const productsWithPrices = await Promise.all(
+    products.map(async (product) => {
+      const latestBid = await BiddingProduct.findOne({ product: product._id }).sort("-createdAt");
+      const biddingPrice = latestBid ? latestBid.price : product.price;
+      return {
+        ...product._doc,
+        biddingPrice, // Adding the price field
+      };
+    })
+  );
 
-  //res.status(200).json(productsWithPrices);
+  res.status(200).json(productsWithPrices);
 
   res.json(products);
 });
@@ -221,18 +241,18 @@ const verifyAndAddCommissionProductByAmdin = asyncHandler(async (req, res) => {
 const getAllProductsByAmdin = asyncHandler(async (req, res) => {
   const products = await Product.find({}).sort("-createdAt").populate("user");
 
-  // const productsWithPrices = await Promise.all(
-  //   products.map(async (product) => {
-  //     const latestBid = await BiddingProduct.findOne({ product: product._id }).sort("-createdAt");
-  //     const biddingPrice = latestBid ? latestBid.price : product.price;
-  //     return {
-  //       ...product._doc,
-  //       biddingPrice, // Adding the price field
-  //     };
-  //   })
-  // );
+  const productsWithPrices = await Promise.all(
+    products.map(async (product) => {
+      const latestBid = await BiddingProduct.findOne({ product: product._id }).sort("-createdAt");
+      const biddingPrice = latestBid ? latestBid.price : product.price;
+      return {
+        ...product._doc,
+        biddingPrice, // Adding the price field
+      };
+    })
+  );
 
-  res.status(200).json(products);
+  res.status(200).json(productsWithPrices);
 });
 
 // dot not it
@@ -264,12 +284,13 @@ const getAllSoldProducts = asyncHandler(async (req, res) => {
 module.exports = {
   createProduct,
   getAllProducts,
+  getWonProducts,
+  getProductBySlug,
   deleteProduct,
   updateProduct,
-  getAllProductsofUser,
   verifyAndAddCommissionProductByAmdin,
   getAllProductsByAmdin,
   deleteProductsByAmdin,
-  getProductBySlug,
-  getAllSoldProducts
+  getAllSoldProducts,
+  getAllProductsofUser,
 };

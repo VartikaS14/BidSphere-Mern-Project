@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Title } from "../../router";
 import { CiMedal } from "react-icons/ci";
 import { GiBarbedStar } from "react-icons/gi";
@@ -7,10 +7,27 @@ import { MdDashboard, MdOutlineCategory } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { useRedirectLoggedOutUser } from "../../hooks/useRedirectLoggedOutUser";
+import { useUserProfile } from "../../hooks/setUserProfile";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllUser, getUserIncome, getuserProfile } from "../../redux/features/authSlice";
+import { getAllProduct, getAllProductOfUser, getAllWonedProductOfUser } from "../../redux/features/productSlice";
 
 export const Dashboard = () => {
   useRedirectLoggedOutUser("/login");
-  const role = "admin";
+  const {role} = useUserProfile();
+  const {income,users}=useSelector((state)=>state.auth);
+  const {products,userProducts,wonproducts,product}=useSelector((state)=>state.product);
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(getuserProfile());
+    dispatch(getUserIncome());
+    dispatch(getAllProduct());
+    dispatch(getAllWonedProductOfUser());
+    dispatch(getAllProductOfUser());
+    dispatch(getAllUser());
+
+  },[dispatch]);
   return (
     <>
       <section>
@@ -20,11 +37,13 @@ export const Dashboard = () => {
           </Title>
           <hr className="my-5" />
 
+          {role === "buyer" && <h1 className="text-2xl text-center font-semibold py-8 text-green">PLease Become a SELLER</h1>}
+          {role === "admin" || (role === "seller" && (
           <div className="grid grid-cols-3 gap-8 mt-8">
             <div className="shadow-s3 border border-green bg-green_100 p-8 flex items-center text-center justify-center gap-5 flex-col rounded-xl">
               <BsCashCoin size={80} className="text-green" />
               <div>
-                <Title level={1}>500 </Title>
+                <Title level={1}>{income?.balance} </Title>
                 <Title>Balance</Title>
               </div>
             </div>
@@ -47,20 +66,21 @@ export const Dashboard = () => {
                 <div className="shadow-s3 border border-green bg-green_100 p-8 flex items-center text-center justify-center gap-5 flex-col rounded-xl">
                   <MdOutlineCategory size={80} className="text-green" />
                   <div>
-                    <Title level={1}>50</Title>
+                    <Title level={1}>{product?.length}</Title>
                     <Title>All Products </Title>
                   </div>
                 </div>
                 <div className="shadow-s3 border border-green bg-green_100 p-8 flex items-center text-center justify-center gap-5 flex-col rounded-xl">
                   <HiOutlineUsers size={80} className="text-green" />
                   <div>
-                    <Title level={1}>100</Title>
+                    <Title level={1}>{users?.length}</Title>
                     <Title>All Users </Title>
                   </div>
                 </div>
               </>
             )}
           </div>
+          ))}
         </div>
       </section>
     </>

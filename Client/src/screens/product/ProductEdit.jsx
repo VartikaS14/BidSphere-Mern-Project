@@ -1,7 +1,70 @@
 import { PrimaryButton, Caption, Title } from "../../router";
 import { commonClassNameOfInput } from "../../components/common/Design";
+import { useRedirectLoggedOutUser } from "../../hooks/useRedirectLoggedOutUser";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { createProduct, getAllProduct, getProduct, selectProduct, updateProduct } from "../../redux/features/productSlice";
+import { useEffect, useState } from "react";
 
 export const ProductEdit = () => {
+  useRedirectLoggedOutUser("/login");
+  const{id} = useParams();
+  const dispatch=useDispatch();
+  const navigate = useNavigate();
+
+  const productEdit=useSelector(selectProduct);
+  const { isSuccess } = useSelector((state) => state.product);
+ // const {userproducts}=useSelector((state)=>state.product);
+  const [product, setProduct] = useState(productEdit);
+  const [productImage, setProductImage] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
+
+  //const { title, description, price, height, lengthpic, width, mediumused, weigth, category } = product;
+
+  useEffect(()=>{
+    dispatch(getProduct(id));
+  },[dispatch,id]);
+
+  useEffect(()=>{
+    setProduct(productEdit)
+    setImagePreview(productEdit && productEdit.image ? `$(productEdit.image.filePath)`:null);
+  },[productEdit]);
+
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProduct({ ...product, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
+    setProductImage(e.target.files[0]);
+    setImagePreview(URL.createObjectURL(e.target.files[0]));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("price", price);
+    formData.append("lengthpic", lengthpic);
+    formData.append("height", height);
+    formData.append("width", width);
+    formData.append("mediumused", mediumused);
+    formData.append("weigth", weigth);
+    formData.append("description", description);
+    formData.append("image", productImage);
+
+    await dispatch(updateProduct({id,formData}))
+    dispatch(getAllProduct());
+
+    await dispatch(createProduct(formData));
+
+    if (isSuccess) {
+      navigate("/product");
+    }
+  };
+
   return (
     <>
       <section className="bg-white shadow-s1 p-8 rounded-xl">

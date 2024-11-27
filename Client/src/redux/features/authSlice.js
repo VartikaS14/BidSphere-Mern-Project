@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")) || null,
   users: [],
+  income:null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -73,6 +74,35 @@ export const loginUserAsSeller = createAsyncThunk("auth/login-as-seller", async 
     return thunkAPI.rejectWithValue(errorMessage);
   }
 });
+
+export const getUserIncome = createAsyncThunk("auth/get-income", async (thunkAPI) => {
+  try {
+    return await authService.getUserIncome();
+  } catch (error) {
+    const errorMessage = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+});
+
+
+
+export const getIncome = createAsyncThunk("auth/get-income-of-admin", async (thunkAPI) => {
+  try {
+    return await authService.getUserIncome();
+  } catch (error) {
+    const errorMessage = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+});
+export const getAllUser = createAsyncThunk("auth/getallusers", async (thunkAPI) => {
+  try {
+    return await authService.getAllUser();
+  } catch (error) {
+    const errorMessage = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+});
+
 
 const authSlice = createSlice({
   name: "auth",
@@ -182,6 +212,52 @@ const authSlice = createSlice({
         state.user = null;
         toast.error(action.payload);
       })
+      .addCase(getUserIncome.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUserIncome.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isLoggedIn = true;
+        state.income = action.payload;
+      })
+      .addCase(getUserIncome.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isLoggedIn = true;
+        state.message = action.payload;
+      })
+      .addCase(getIncome.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getIncome.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isLoggedIn = true;
+        state.income = action.payload;
+      })
+      .addCase(getIncome.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isLoggedIn = true;
+        state.message = action.payload;
+      })
+      .addCase(getAllUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isLoggedIn = true;
+        state.users = action.payload;
+        state.totalUsers=action.payload?.length;
+      })
+      .addCase(getAllUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isLoggedIn = true;
+        state.message = action.payload;
+      });
   },
 });
 

@@ -33,7 +33,21 @@ const loginUserAsSeller = async (userData) =>{
     });
     return response.data;
 };
+const getUserIncome = async () =>{
+    const response = await axios.get(AUTH_URL+"sell-amount");
+    return response.data;
+};
 
+//only accessible to adminusers
+const getIncome = async () =>{
+    const response = await axios.get(AUTH_URL+"estimate-income");
+    return response.data;
+};
+
+const getAllUser = async () =>{
+    const response = await axios.get(AUTH_URL+"users");
+    return response.data;
+};
 const authService = {
     register,
     login,
@@ -41,5 +55,8 @@ const authService = {
     getLogInStatus,
     getuserProfile,
     loginUserAsSeller,
+    getUserIncome,
+    getIncome,
+    getAllUser
 }
 export default authService;
