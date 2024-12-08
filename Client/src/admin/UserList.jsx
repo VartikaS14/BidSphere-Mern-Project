@@ -6,6 +6,7 @@ import { useRedirectLoggedOutUser } from "../hooks/useRedirectLoggedOutUser";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getAllUser } from "../redux/features/authSlice";
+import { DateFormatter } from "../utils/DateFormatter";
 
 export const UserList = () => {
   useRedirectLoggedOutUser("/login");
@@ -60,10 +61,11 @@ export const UserList = () => {
               <td className="px-6 py-4 capitalize">{user?.role}</td>
               <td className="px-6 py-4">
                 <ProfileCard>
-                  <img src={user?.photo} alt={user?.name} />
+                  <img src={`http://localhost:5000/${user?.photo}`} alt={user?.name} />
                 </ProfileCard>
               </td>
-              <td className="px-6 py-4">{user?.createdAt}</td>
+              <td className="px-6 py-4">
+                <DateFormatter date={user?.createdAt}/></td>
               <td className="py-4 flex justify-end px-8">
                 <NavLink to="#" type="button" className="font-medium text-indigo-500">
                   <TiEyeOutline size={25} />

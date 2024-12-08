@@ -48,7 +48,7 @@ export const Sidebar = () => {
     <>
       <section className="sidebar flex flex-col justify-between h-[500px]">
         <div className="profile flex items-center text-center justify-center gap-8 flex-col mb-8">
-          <img src={User1} alt="" className="w-32 h-32 rounded-full object-cover" />
+          <img src={`http://localhost:5000/${user?.photo}`} alt="" className="w-32 h-32 rounded-full object-cover" />
           <div>
             <Title className="capitalize">{user?.name}</Title>
             <Caption>{user?.email}</Caption>

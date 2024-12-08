@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../model/productModel");
 const BiddingProduct = require("../model/biddingProductModel");
+const mongoose = require('mongoose');
 const slugify = require("slugify");
 const fs = require("fs");
 
@@ -14,7 +15,7 @@ const createProduct = asyncHandler(async (req, res) => {
     lengthpic,
     width,
     mediumused,
-    weight,
+    weigth,
   } = req.body;
   const userId = req.user._id; // Assuming user ID comes from middleware after authentication
 
@@ -45,13 +46,11 @@ const createProduct = asyncHandler(async (req, res) => {
     throw new Error("Please upload an image.");
   }
 
-  // Prepare file data
   const fileData = {
     fileName: req.file.originalname,
-    filePath: req.file.path, // Path provided by Multer
+    filePath: req.file.path.replace(/\\/g, "/"), // Fix backslashes for URL compatibility
     fileType: req.file.mimetype,
   };
-
   // Create the product
   const product = await Product.create({
     user: userId,
@@ -64,7 +63,7 @@ const createProduct = asyncHandler(async (req, res) => {
     lengthpic,
     width,
     mediumused,
-    weight,
+    weigth,
     image: fileData, // Include image file data
   });
 
@@ -131,51 +130,40 @@ const deleteProduct = asyncHandler(async (req, res) => {
 });
 
 const updateProduct = asyncHandler(async (req, res) => {
-  const {
-    title,
-    description,
-    price,
-    height,
-    lengthpic,
-    width,
-    mediumused,
-    weight,
-  } = req.body;
+  const { title, description, price, height, lengthpic, width, mediumused, weight } = req.body;
   const { id } = req.params;
-  const product = await Product.findById(id);
+  console.log(id);
 
+  const product = await Product.findById(id);
   if (!product) {
-    res.status(404);
-    throw new Error("Product not found");
+    return res.status(404).json({ message: "Product not found" });
   }
 
   if (product.user.toString() !== req.user.id) {
-    res.status(401);
-    throw new Error("User not authorized");
+    return res.status(401).json({ message: "User not authorized" });
   }
 
   let fileData = {};
   if (req.file) {
-    // Handling file upload (using Multer)
     fileData = {
       fileName: req.file.originalname,
       filePath: req.file.path,
       fileType: req.file.mimetype,
     };
 
-    // If the product has an existing image, delete the old one from the filesystem
     if (product.image && product.image.filePath) {
       try {
         fs.unlinkSync(product.image.filePath);
         console.log("Old image deleted successfully");
       } catch (error) {
         console.error("Error deleting old image:", error);
+        return res.status(500).json({ message: "Error deleting old image" });
       }
     }
   }
 
   const updatedProduct = await Product.findByIdAndUpdate(
-    { _id: id },
+    id,
     {
       title,
       description,
@@ -185,7 +173,7 @@ const updateProduct = asyncHandler(async (req, res) => {
       width,
       mediumused,
       weight,
-      image: Object.keys(fileData).length === 0 ? product.image : fileData, // Retain existing image if no new file uploaded
+      image: Object.keys(fileData).length === 0 ? product.image : fileData,
     },
     {
       new: true,
@@ -193,8 +181,16 @@ const updateProduct = asyncHandler(async (req, res) => {
     }
   );
 
+  if (!updatedProduct) {
+    return res.status(500).json({ message: "Error updating product" });
+  }
+
   res.status(200).json(updatedProduct);
 });
+
+
+
+
 const getAllProductsofUser = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
@@ -215,7 +211,7 @@ const getAllProductsofUser = asyncHandler(async (req, res) => {
 
   res.status(200).json(productsWithPrices);
 
-  res.json(products);
+ // res.json(products);
 });
 
 // for admin only users
@@ -267,15 +263,21 @@ const deleteProductsByAmdin = asyncHandler(async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 const getProductBySlug = asyncHandler(async (req, res) => {
-  const { _id } = req.params;
-  const product = await Product.findById(_id);
+  // Accessing the correct parameter name
+  const { id } = req.params; 
+
+  const product = await Product.findById(id);
+
   if (!product) {
-    res.status(404);
-    throw new Error("Product not found");
+      res.status(404);
+      throw new Error("Product not found");
   }
+
   res.status(200).json(product);
 });
+
 
 const getAllSoldProducts = asyncHandler(async (req, res) => {
   const product = await Product.find({ isSoldout: true }).sort("-createdAt").populate("user");

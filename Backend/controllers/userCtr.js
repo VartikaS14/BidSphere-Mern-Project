@@ -188,14 +188,50 @@ const estimateIncome = asyncHandler(async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
+const updateUser = asyncHandler(async (req, res) => {
+  const { name, email, role } = req.body;
+
+  // Find the user by ID
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+
+  // Update fields if provided
+  if (name) user.name = name;
+  if (email) user.email = email;
+  if (role) user.role = role;
+
+  // Handle profile photo update
+  if (req.file) {
+    const filePath = path.join("uploads", req.file.filename);
+    user.photo = filePath;
+  }
+
+  // Save the updated user
+  await user.save();
+
+  res.status(200).json({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    photo: user.photo,
+    role: user.role,
+  });
+});
+
 module.exports = {
-    registerUser,
-    loginUser,
-    loginStatus,
-    logoutUser,
-    loginAsSeller,
-    getUser,
-    getUserBalance,
-    getAllUser,
-    estimateIncome,
+  registerUser,
+  loginUser,
+  loginStatus,
+  logoutUser,
+  loginAsSeller,
+  getUser,
+  getUserBalance,
+  getAllUser,
+  estimateIncome,
+  updateUser, // export the updateUser function
 };

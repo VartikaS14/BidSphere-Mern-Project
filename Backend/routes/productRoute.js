@@ -25,12 +25,16 @@ router.get("/", getAllProducts);
 router.get("/user", protect, getAllProductsofUser);
 router.get("/won-products", protect, getWonProducts);
 router.get("/sold", getAllSoldProducts);
-router.get("/:id", getProductBySlug);
-
 
 
 // Only access for admin users
-router.patch("/admin/product-verified/:id",protect,isAdmin,verifyAndAddCommissionProductByAmdin);
+router.patch("/admin/product-verified/:id", protect, isAdmin, verifyAndAddCommissionProductByAmdin);
 router.get("/admin/products", protect, isAdmin, getAllProductsByAmdin);
 router.delete("/admin/products", protect, isAdmin, deleteProductsByAmdin);
+
+// Move this route to the end
+router.get("/:id", getProductBySlug);
+
 module.exports = router;
+
+

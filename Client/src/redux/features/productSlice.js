@@ -6,7 +6,6 @@ const initialState = {
   products: [],
   userProducts: [],
   wonproducts: [],
-
   product: null,
   isError: false,
   isSuccess: false,
@@ -21,9 +20,22 @@ export const createProduct = createAsyncThunk(
       return await productService.createProduct(formData);
     } catch (error) {
       const errorMessage =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const getAllProductOfUser = createAsyncThunk(
+  "product/get-user-products",
+  async (_, thunkAPI) => {
+    try {
+      return await productService.getAllProductOfUser();
+    } catch (error) {
+      const errorMessage =
+        (error.response && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
       return thunkAPI.rejectWithValue(errorMessage);
@@ -32,110 +44,103 @@ export const createProduct = createAsyncThunk(
 );
 
 export const getAllProduct = createAsyncThunk(
-    "product/public/get-products",
-    async ( thunkAPI) => {
-      try {
-        return await productService.getAllProduct();
-      } catch (error) {
-        const errorMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        return thunkAPI.rejectWithValue(errorMessage);
-      }
+  "product/public/get-products",
+  async (thunkAPI) => {
+    try {
+      return await productService.getAllProduct();
+    } catch (error) {
+      const errorMessage =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(errorMessage);
     }
-  );
-
-  export const getProduct = createAsyncThunk(
-    "product/public/get-product",
-    async ( id,thunkAPI) => {
-      try {
-        return await productService.getProduct(id);
-      } catch (error) {
-        const errorMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        return thunkAPI.rejectWithValue(errorMessage);
-      }
-    }
-  );
-
-export const getAllProductOfUser = createAsyncThunk(
-    "product/get-user-products",
-    async ( thunkAPI) => {
-      try {
-        return await productService.getAllProductOfUser();
-      } catch (error) {
-        const errorMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        return thunkAPI.rejectWithValue(errorMessage);
-      }
-    }
+  }
 );
+
+export const getProduct = createAsyncThunk(
+  "product/public/get-product",
+  async (id, thunkAPI) => {
+    try {
+      return await productService.getProduct(id);
+    } catch (error) {
+      const errorMessage =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+
 export const getAllWonedProductOfUser = createAsyncThunk(
-    "product/get-wonned-user-products",
-    async ( thunkAPI) => {
-      try {
-        return await productService.getAllWonedProductOfUser();
-      } catch (error) {
-        const errorMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        return thunkAPI.rejectWithValue(errorMessage);
-      }
+  "product/get-wonned-user-products",
+  async (_, thunkAPI) => {
+    try {
+      //console.log("Fetching woned products...");
+      const response = await productService.getAllWonedProductOfUser();
+      //console.log("Fetched woned products:", response);  // Log the response data
+      return response;
+    } catch (error) {
+      const errorMessage =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      console.error("Error fetching woned products:", errorMessage);  // Log the error message
+      return thunkAPI.rejectWithValue(errorMessage);
     }
+  }
 );
+
 
 export const deleteProduct = createAsyncThunk(
-    "product/delete",
-    async ( id,thunkAPI) => {
-      try {
-        return await productService.deleteProduct(id);
-      } catch (error) {
-        const errorMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        return thunkAPI.rejectWithValue(errorMessage);
-      }
+  "product/delete",
+  async (id, thunkAPI) => {
+    try {
+      return await productService.deleteProduct(id);
+    } catch (error) {
+      const errorMessage =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(errorMessage);
     }
+  }
 );
 
 export const updateProduct = createAsyncThunk(
-    "product/user/update",
-    async ( id,formData,thunkAPI) => {
-      try {
-        return await productService.updateProduct(id,formData);
-      } catch (error) {
-        const errorMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        return thunkAPI.rejectWithValue(errorMessage);
-      }
+  "product/user/update",
+  async ({ id, formData }, thunkAPI) => {
+    try {
+      console.log("in slice",id);
+      return await productService.updateProduct({id, formData});
+      
+    } catch (error) {
+      const errorMessage =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(errorMessage);
     }
+  }
 );
-
-
-
-
-
+export const updateProductByAdmin = createAsyncThunk(
+  "product/admin/update",
+  async ({ id, formData }, thunkAPI) => {
+    try {
+      console.log("in slice",id);
+      return await productService.updateProductByAdmin({id, formData});
+      
+    } catch (error) {
+      const errorMessage =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
 
 const productSlice = createSlice({
   name: "product",
@@ -150,7 +155,7 @@ const productSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.products.push(action.payload)
+        state.products.push(action.payload);
         toast.success("Product has been created");
       })
       .addCase(createProduct.rejected, (state, action) => {
@@ -166,7 +171,7 @@ const productSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.products=action.payload;
+        state.products = action.payload;
       })
       .addCase(getAllProduct.rejected, (state, action) => {
         state.isLoading = false;
@@ -180,7 +185,7 @@ const productSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.products=action.payload;
+        state.product = action.payload; // Changed to store a single product
       })
       .addCase(getProduct.rejected, (state, action) => {
         state.isLoading = false;
@@ -194,7 +199,7 @@ const productSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.userProducts=action.payload;
+        state.userProducts = action.payload;
       })
       .addCase(getAllProductOfUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -208,7 +213,7 @@ const productSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.wonproducts=action.payload;
+        state.wonproducts = action.payload;
       })
       .addCase(getAllWonedProductOfUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -222,13 +227,13 @@ const productSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        toast.success("Product deletes successfully");
+        toast.success("Product deleted successfully");
       })
       .addCase(deleteProduct.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        toast.success(action.payload);
+        toast.error(action.payload); // Changed to toast.error for failure
       })
       .addCase(updateProduct.pending, (state) => {
         state.isLoading = true;
@@ -243,10 +248,26 @@ const productSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        toast.success(action.payload);
-      });
-    }
+        toast.error(action.payload); // Changed to toast.error for failure
+      })
+      .addCase(updateProductByAdmin.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateProductByAdmin.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.message=action.payload;
+        toast.success("Product updated successfully");
+      })
+      .addCase(updateProductByAdmin.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.success(action.payload); // Changed to toast.error for failure
+      })
+  },
 });
 
-export const selectProduct = (state) =>state.product.product;
-export default productSlice.reducer
+export const selectProduct = (state) => state.product.product;
+export default productSlice.reducer;

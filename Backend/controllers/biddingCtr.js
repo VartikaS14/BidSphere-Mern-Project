@@ -7,7 +7,7 @@ const User = require("../model/userModel");
 const getBiddingHistory = asyncHandler(async (req, res) => {
     const { productId } = req.params;
   
-    const biddingHistory = await BiddingProduct.find({ product: productId }).sort("-createdAt").populate("user").populate("product");
+    const biddingHistory = await BiddingProduct.find({ product: productId }).sort("createdAt").populate("user").populate("product");
   
     res.status(200).json(biddingHistory);
     //res.json("bidding hsi")
@@ -15,7 +15,6 @@ const getBiddingHistory = asyncHandler(async (req, res) => {
   const placeBid = asyncHandler(async (req, res) => {
     const { productId, price } = req.body;
     const userId = req.user.id;
-  
     const product = await Product.findById(productId);
     if (!product.isverify) {
       res.status(400);
@@ -27,10 +26,10 @@ const getBiddingHistory = asyncHandler(async (req, res) => {
       throw new Error("Invalid product or bidding is closed");
     }
   
-    /*  if (price < product.minprice) {
+     if (price < product.minprice) {
       res.status(400);
       throw new Error("Your bid must be equal to or higher than the minimum bidding price");
-    } */
+    } 
   
     const existingUserBid = await BiddingProduct.findOne({ user: userId, product: productId });
   

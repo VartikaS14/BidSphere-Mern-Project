@@ -36,7 +36,7 @@ export const AdminProductList = () => {
           </Title>
         </div>
         <hr className="my-5" />
-        <Table products={products}/>
+        <Table products={products} isAdmin={true}/>
       </section>
     </>
   );

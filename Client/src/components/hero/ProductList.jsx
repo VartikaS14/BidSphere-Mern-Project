@@ -2,7 +2,7 @@ import { Container, Heading } from "../../router";
 import { ProductCard } from "../cards/ProductCard";
 
 export const ProductList = ({ products }) => {  
-  console.log(products); 
+  //console.log(products); 
   return (
     <>
       <section className="product-home">

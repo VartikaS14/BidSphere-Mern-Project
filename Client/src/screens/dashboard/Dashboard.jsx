@@ -16,7 +16,7 @@ export const Dashboard = () => {
   useRedirectLoggedOutUser("/login");
   const {role} = useUserProfile();
   const {income,users}=useSelector((state)=>state.auth);
-  const {products,userProducts,wonproducts,product}=useSelector((state)=>state.product);
+  const {products,userProducts,wonproducts}=useSelector((state)=>state.product);
   const dispatch = useDispatch();
 
   useEffect(()=>{
@@ -38,7 +38,7 @@ export const Dashboard = () => {
           <hr className="my-5" />
 
           {role === "buyer" && <h1 className="text-2xl text-center font-semibold py-8 text-green">PLease Become a SELLER</h1>}
-          {role === "admin" || (role === "seller" && (
+          {(role === "admin" || role === "seller") && (
           <div className="grid grid-cols-3 gap-8 mt-8">
             <div className="shadow-s3 border border-green bg-green_100 p-8 flex items-center text-center justify-center gap-5 flex-col rounded-xl">
               <BsCashCoin size={80} className="text-green" />
@@ -50,14 +50,14 @@ export const Dashboard = () => {
             <div className="shadow-s3 border border-green bg-green_100 p-8 flex items-center text-center justify-center gap-5 flex-col rounded-xl">
               <CiMedal size={80} className="text-green" />
               <div>
-                <Title level={1}>2</Title>
+                <Title level={1}>{wonproducts?.length}</Title>
                 <Title>Items Won</Title>
               </div>
             </div>
             <div className="shadow-s3 border border-green bg-green_100 p-8 flex items-center text-center justify-center gap-5 flex-col rounded-xl">
               <GiBarbedStar size={80} className="text-green" />
               <div>
-                <Title level={1}>100</Title>
+                <Title level={1}>{userProducts?.length}</Title>
                 <Title>Your Products </Title>
               </div>
             </div>
@@ -66,7 +66,7 @@ export const Dashboard = () => {
                 <div className="shadow-s3 border border-green bg-green_100 p-8 flex items-center text-center justify-center gap-5 flex-col rounded-xl">
                   <MdOutlineCategory size={80} className="text-green" />
                   <div>
-                    <Title level={1}>{product?.length}</Title>
+                    <Title level={1}>{products?.length}</Title>
                     <Title>All Products </Title>
                   </div>
                 </div>
@@ -80,7 +80,7 @@ export const Dashboard = () => {
               </>
             )}
           </div>
-          ))}
+          )}
         </div>
       </section>
     </>

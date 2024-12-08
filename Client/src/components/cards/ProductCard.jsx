@@ -6,12 +6,13 @@ import { Caption, PrimaryButton, ProfileCard, Title } from "../common/Design";
 import { NavLink } from "react-router-dom";
 
 export const ProductCard = ({ item }) => {
+  
   return (
     <>
       <div className="bg-white shadow-s1 rounded-xl p-3">
         <div className="h-56 relative overflow-hidden">
           <NavLink to={`/details/${item?._id}`}>
-            <img src={item?.image?.filePath} alt={item?.image} className="w-full h-full object-cover rounded-xl hover:scale-105 hover:cursor-pointer transition-transform duration-300 ease-in-out" />
+            <img src={`http://localhost:5000/${item?.image?.filePath}`} alt={item?.image} className="w-full h-full object-cover rounded-xl hover:scale-105 hover:cursor-pointer transition-transform duration-300 ease-in-out" />
           </NavLink>
           <ProfileCard className="shadow-s1 absolute right-3 bottom-3">
             <RiAuctionFill size={22} className="text-green" />
@@ -29,7 +30,7 @@ export const ProductCard = ({ item }) => {
           </div>
         </div>
         <div className="details mt-4">
-          <Title className="uppercase">{item.title}</Title>
+          <Title className="uppercase">{item.title.slice(0,20)}</Title>
           <hr className="mt-3" />
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center justify-between gap-5">
