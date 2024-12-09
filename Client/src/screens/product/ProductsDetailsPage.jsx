@@ -112,24 +112,9 @@ export const ProductsDetailsPage = () => {
               <br />
               <Caption>Time left:</Caption>
               <br />
-              <div className="flex gap-8 text-center">
-                <div className="p-5 px-10 shadow-s1">
-                  <Title level={4}>149</Title>
-                  <Caption>Days</Caption>
-                </div>
-                <div className="p-5 px-10 shadow-s1">
-                  <Title level={4}>12</Title>
-                  <Caption>Hours</Caption>
-                </div>
-                <div className="p-5 px-10 shadow-s1">
-                  <Title level={4}>36</Title>
-                  <Caption>Minutes</Caption>
-                </div>
-                <div className="p-5 px-10 shadow-s1">
-                  <Title level={4}>51</Title>
-                  <Caption>Seconds</Caption>
-                </div>
-              </div>
+              
+                
+            
               <br />
               <Title className="flex items-center gap-2">
                 Auction ends:

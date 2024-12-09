@@ -61,7 +61,7 @@ export const UserList = () => {
               <td className="px-6 py-4 capitalize">{user?.role}</td>
               <td className="px-6 py-4">
                 <ProfileCard>
-                  <img src={`http://localhost:5000/${user?.photo}`} alt={user?.name} />
+                  <img src={`http://localhost:5000/${user?.photo}`} alt={user?.name} className="w-full h-full rounded-full object-cover"  />
                 </ProfileCard>
               </td>
               <td className="px-6 py-4">

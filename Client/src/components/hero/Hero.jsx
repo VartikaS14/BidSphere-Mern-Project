@@ -7,7 +7,8 @@ export const User1 = "https://cdn-icons-png.flaticon.com/128/6997/6997662.png";
 export const User2 = "https://cdn-icons-png.flaticon.com/128/236/236832.png";
 export const User3 = "https://cdn-icons-png.flaticon.com/128/236/236831.png";
 export const User4 = "https://cdn-icons-png.flaticon.com/128/1154/1154448.png";
-
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 export const Hero = () => {
   return (
     <>
@@ -82,21 +83,35 @@ export const Hero = () => {
 };
 
 const SearchBox = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+  const handleSearch = (e) => {
+    e.preventDefault();
+    // Navigate to Search page with query as a URL parameter
+    navigate(`/search?query=${searchQuery}`);
+  };
   return (
-    <>
-      <form className="">
-        <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-800 sr-only">
-          Search
-        </label>
-        <div className="relative">
-          <div className="absolute inset-y-0 start-2 flex items-center ps-3 pointer-events-none">
-            <IoIosSearch color="black" size={25} />
-          </div>
-          <input type="search" id="default-search" className="block shadow-md w-full p-6 ps-16 text-sm text-gray-800 rounded-full bg-gray-50 outline-none" placeholder="Search product..." />
-          <PrimaryButton className="absolute end-2.5 bottom-2">Search</PrimaryButton>
+    <form onSubmit={handleSearch}>
+      <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-800 sr-only">
+        Search
+      </label>
+      <div className="relative">
+        <div className="absolute inset-y-0 start-2 flex items-center ps-3 pointer-events-none">
+          <IoIosSearch color="black" size={25} />
         </div>
-      </form>
-    </>
+        <input
+          type="search"
+          id="default-search"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)} // Update the search query state
+          className="block shadow-md w-full p-6 ps-16 text-sm text-gray-800 rounded-full bg-gray-50 outline-none"
+          placeholder="Search product..."
+        />
+        <PrimaryButton type="submit" className="absolute end-2.5 bottom-2">
+          Search
+        </PrimaryButton>
+      </div>
+    </form>
   );
 };
 

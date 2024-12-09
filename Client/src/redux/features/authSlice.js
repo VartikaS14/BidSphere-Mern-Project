@@ -104,6 +104,8 @@ export const getAllUser = createAsyncThunk("auth/getallusers", async (thunkAPI) 
 });
 
 
+
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -257,7 +259,8 @@ const authSlice = createSlice({
         state.isError = true;
         state.isLoggedIn = true;
         state.message = action.payload;
-      });
+      })
+      ;
   },
 });
 

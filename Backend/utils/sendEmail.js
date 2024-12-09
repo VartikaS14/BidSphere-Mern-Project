@@ -1,32 +1,41 @@
-const http = require("http");
 const nodemailer = require("nodemailer");
 
-const server = http.createServer((request, response) => {
-    const auth = nodemailer.createTransport({
-        service: "gmail",
-        secure : true,
-        port : 465,
-        auth: {
-            user: "youremail@gmail.com",
-            pass: "your_password"
+const sendEmail = async (options) => {
+  try {
+    if (!options.email) {
+      throw new Error("No recipients defined");
+    }
 
-        }
+    console.log("Preparing to send email...");
+    console.log("Recipient email:", options.email);
+
+    const transport = nodemailer.createTransport({
+      service: "Gmail",
+      port: process.env.SMPT_PORT,
+      auth: {
+        user: process.env.SMPT_EMAIL,
+        pass: process.env.SMPT_PASS,
+      },
+      secure: false,
     });
 
-    const receiver = {
-        from : "youremail@gmail.com",
-        to : "youremail@gmail.com",
-        subject : "Node Js Mail Testing!",
-        text : "Hello this is a text mail!"
+    console.log("Transport configuration created successfully.");
+
+    const message = {
+      from: `${process.env.SMPT_FROM_NAME} <${process.env.SMPT_FROM_EMAIL}> `,
+      to: options.email,
+      subject: options.subject,
+      text: options.text,
     };
 
-    auth.sendMail(receiver, (error, emailResponse) => {
-        if(error)
-        throw error;
-        console.log("success!");
-        response.end();
-    });
-    
-});
+    console.log("Message details:", message);
 
-server.listen(8080);
+    await transport.sendMail(message);
+    console.log("Email sent successfully!");
+  } catch (error) {
+    console.error("Error sending email:", error.message);
+    throw error;
+  }
+};
+
+module.exports = sendEmail;

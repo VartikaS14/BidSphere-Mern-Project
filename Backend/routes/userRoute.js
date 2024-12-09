@@ -16,6 +16,6 @@ router.get("/estimate-income", protect, isAdmin, estimateIncome);
 router.get("/users", protect, isAdmin, getAllUser);
 
 // Route for updating user profile
-router.put("/update", protect, upload.single("photo"), updateUser);
+router.put("/:id", protect, upload.single("photo"), updateUser);
 
 module.exports = router;

@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../model/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-
+const fs = require('fs');
 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
@@ -192,35 +192,65 @@ const estimateIncome = asyncHandler(async (req, res) => {
 
 const updateUser = asyncHandler(async (req, res) => {
   const { name, email, role } = req.body;
-
+  const { id } = req.params;  // Assuming the user is identified by their ID in the URL
+  
   // Find the user by ID
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(id);
   if (!user) {
-    res.status(404);
-    throw new Error("User not found");
+    return res.status(404).json({ message: "User not found" });
   }
 
-  // Update fields if provided
-  if (name) user.name = name;
-  if (email) user.email = email;
-  if (role) user.role = role;
+  // Check if the logged-in user is the one attempting to update the profile
+  if (user._id.toString() !== req.user.id) {
+    return res.status(401).json({ message: "User not authorized" });
+  }
 
-  // Handle profile photo update
+  // To handle image upload
+  let fileData = {};
   if (req.file) {
-    const filePath = path.join("uploads", req.file.filename);
-    user.photo = filePath;
+    fileData = {
+      fileName: req.file.originalname,
+      filePath: req.file.path,
+      fileType: req.file.mimetype,
+    };
+
+    // Only delete the old image if it's not the default image
+    if (user.photo && user.photo !== "uploads/default.png") {
+      try {
+        // Ensure that the photo path is valid before trying to delete the file
+        if (typeof user.photo === 'string') {
+          fs.unlinkSync(user.photo); // Delete old photo
+          console.log("Old profile photo deleted successfully");
+        } else {
+          console.error("The old photo path is not a valid string.");
+        }
+      } catch (error) {
+        console.error("Error deleting old profile photo:", error);
+        return res.status(500).json({ message: "Error deleting old profile photo" });
+      }
+    }
   }
 
-  // Save the updated user
-  await user.save();
+  // Update the user's profile with the new data
+  const updatedUser = await User.findByIdAndUpdate(
+    id,
+    {
+      name,
+      email,
+      role,
+      photo: Object.keys(fileData).length === 0 ? user.photo : fileData.filePath, // Update photo if new file is uploaded
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 
-  res.status(200).json({
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    photo: user.photo,
-    role: user.role,
-  });
+  if (!updatedUser) {
+    return res.status(500).json({ message: "Error updating user" });
+  }
+
+  res.status(200).json(updatedUser);
 });
 
 module.exports = {

@@ -17,7 +17,7 @@ export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const isLoggedIn = useSelector(selectIsLoggedIn);
-
+  const { user } = useSelector((state) => state.auth);
   const menuRef = useRef(null);
 
   const toggleMenu = () => {
@@ -53,6 +53,7 @@ export const Header = () => {
     if(isLoggedIn)
     {
       dispatch(getuserProfile());
+      
     }
     
   },[dispatch,isLoggedIn]);
@@ -102,7 +103,7 @@ export const Header = () => {
                 <ShowOnLogin>
                 <CustomNavLink href="/dashboard">
                   <ProfileCard>
-                    <img src={User1} alt="" className="w-full h-full object-cover" />
+                    <img src={`http://localhost:5000/${user?.photo}`}alt="" className="w-full h-full rounded-full object-cover" />
                   </ProfileCard>
                 </CustomNavLink>
                 </ShowOnLogin>
